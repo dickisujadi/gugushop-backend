@@ -11,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using gugushop_backend.Config;
+using gugushop_backend.Services;
+using Microsoft.Extensions.Options;
 
 namespace gugushop_backend
 {
@@ -26,6 +29,10 @@ namespace gugushop_backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<UserDbSetting>(Configuration.GetSection(nameof(UserDbSetting)));
+            services.AddSingleton<IUserDbSetting>(sp => sp.GetRequiredService<IOptions<UserDbSetting>>().Value);
+
+            services.AddSingleton<UserService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
